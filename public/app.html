@@ -1,0 +1,250 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#FFF">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <link rel="stylesheet"
+        href="t.css"
+    />
+    <link rel="stylesheet"
+        href="kb.css"
+    />
+    <title>Wordle</title>
+    <link rel="stylesheet" href="light.css" theme='true'/>
+    <style>
+
+      .top-left{
+          position: fixed;
+          top:15px;
+          right: 10px;
+      }
+      .top-right{
+          position: fixed;
+          top:15px;
+          left: 10px;
+      }
+      .titleC{
+          padding: 15px;
+          font-weight: 600;
+          font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      }
+    </style>
+</head>
+
+<body>
+    <div class="top-right">
+        <table><tr>
+            <td class="titleC">W</td>
+            <td class="titleC">O</td>
+            <td class="titleC">R</td>
+            <td class="titleC">D</td>
+            <td class="titleC">L</td>
+            <td class="titleC">Y</td>
+        </tr></table>
+    </div>
+    <div class="top-left">
+        <label class="switch"><input id="ts" type="checkbox" /><div></div>
+        </label>
+    </div>
+<div class="container">
+    <table id="grid">
+        <tr>
+            <td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td>
+        </tr>
+        <tr>
+            <td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td>
+        </tr>
+        <tr>
+            <td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td>
+        </tr>
+        <tr>
+            <td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td>
+        </tr>
+        <tr>
+            <td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td>
+        </tr>
+        <tr>
+            <td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td><td class="i-box"></td>
+        </tr>
+    </table>
+    <input type="text" id="fcs" style="display:none" autofocus/>
+    
+    
+</div>
+<div class="kontainer">
+    <table id="kb">
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="t.js"></script>
+    <script>
+        
+        function tst(str){
+            setTimeout(()=>$.toast({
+                text: str
+            }),500);
+        }
+        var rarr = ["cb","cp","np"];
+        for(var i=0;i<6;i++) document.querySelectorAll("table")[0].children[0].children[0].children[i].classList.add(rarr[parseInt(Math.random()*19284)%rarr.length]);
+        if(localStorage.getItem("theme")==undefined) $("[theme='true']").attr("href","light.css");
+        if(localStorage.getItem("theme")=="dark"){
+            document.getElementById("ts").checked = true;
+            $("[theme='true']").attr("href","dark.css");
+            $("[name='theme-color']").attr("content","#212121");
+        }
+        $("#ts").change(e=>{
+            if(document.getElementById("ts").checked){
+                $("[theme='true']").attr("href","dark.css");
+                localStorage.setItem("theme","dark");
+                $("[name='theme-color']").attr("content","#212121");
+            }else{
+                $("[theme='true']").attr("href","light.css");
+                localStorage.setItem("theme","light");
+                $("[name='theme-color']").attr("content","#FFF");
+            }
+        })
+        function c(a){
+            console.log(a);
+        }
+        function check(ar,cr){
+            var carr = Object();
+            c(ar);
+            c(cr);
+            var word;
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ver=`);
+            if (parts.length === 2) word = parts.pop().split(';').shift();
+
+            for(i in word){
+                if(carr[word[i]]==undefined)
+                    carr[word[i]]=1;
+                else carr[word[i]]++;
+            }
+            var st = ar;
+            c(st);
+            var cq = 0;
+            var arrs = Array(5)
+
+            if(word==ar){
+                for(i in word){
+                    document.querySelector("#grid").children[0].children[cr].children[i].classList.add("cb");
+                    $(`[ky='${st[i].toLowerCase()}']`).addClass("cb");
+                }
+                tst("Yay!");
+                setTimeout(()=>{if(confirm("Want To Play Again ?")){
+                    location.reload(true);
+                }},1500)
+                return;
+            }
+            var s = Array()
+            var k = Array()
+            for(i in st){
+                arrs[i]="np";
+                if(st[i]==word[i]){
+                    carr[word[i]]--;
+                    arrs[i]="cb";
+                    cq++;
+                }else{
+                    s.push(st[i]);
+                    k.push(i);
+                }
+            }
+            for(i in s){
+                if(word.includes(s[i])){
+                    if(carr[s[i]]){
+                        carr[s[i]]--;
+                        arrs[k[i]]="cp"
+                    }
+                }
+            }
+            c(arrs);
+            for(i in arrs){
+                document.querySelector("#grid").children[0].children[cr].children[i].classList.add(arrs[i]);
+                $(`[ky='${st[i].toLowerCase()}']`).addClass(arrs[i]);
+                    
+            }
+            if(cr==5){
+                setTimeout(()=>tst(`The Word was ${word}`),500);
+                setTimeout(()=>{if(confirm("Want To Play Again ?")){
+                    location.reload(true);
+                }},1500)
+                return;
+            }
+        }
+        var arr = Array()
+        var cr = 0;
+        function keyE(q){
+            if(typeof q=="object"){
+            if(q.keyCode == 8){
+                if(arr.length) document.querySelector("#grid").children[0].children[cr].children[arr.length-1].innerHTML = "";
+                arr.pop();
+                return;
+            }if(arr.length == 5){
+                if(q.keyCode==13){
+                    var str = arr.join('');
+                    $.post("/isValid",{word:str.toLowerCase()},(status)=>{
+                        if(status){
+                            check(str,cr);
+                            cr++;
+                            arr = Array();
+                            return;
+                        }
+                    })
+                   
+                }
+                return
+            }else if(q.keyCode>=65 && q.keyCode<=90){
+                document.querySelector("#grid").children[0].children[cr].children[arr.length].innerHTML = q.key
+                arr.push(q.key)
+            }
+        }else{
+            if(q == "⌫"){
+                if(arr.length) document.querySelector("#grid").children[0].children[cr].children[arr.length-1].innerHTML = "";
+                arr.pop();
+                return;
+            }if(arr.length == 5){
+                if(q=="Enter"){
+                    var str = arr.join('');
+                    $.post("/isValid",{word:str.toLowerCase()},(status)=>{
+                        if(status){
+                            check(str,cr);
+                            cr++;
+                            arr = Array();
+                            return;
+                        }
+                    })
+                   
+                }
+                return
+            }else if(q=="Enter" || q == "⌫"){}else{
+                document.querySelector("#grid").children[0].children[cr].children[arr.length].innerHTML = q
+                arr.push(q)
+            }
+        }
+        }
+        window.onkeyup = function(q){
+            console.log(q);
+            keyE(q);
+
+        }
+        var kmp = ["qwertyuiop","asdfghjkl","↵zxcvbnm⌫"];
+        var tstr = "<tbody>";
+        for(var i in kmp){
+            tstr+="<tr>"
+            for(var j in kmp[i]){
+                tstr+=`<td btn='k' ky='${kmp[i][j]}'>${kmp[i][j]}</td>`;
+            }
+            tstr+="</tr>"
+        }
+        tstr+="</tbody>"
+        $("#kb").html(tstr);
+        document.getElementById("kb").children[0].children[2].children[0].innerHTML = "Enter";
+        document.getElementById("kb").children[0].children[2].children[8].classList.add("bigBack");
+        $("[btn='k']").click(function(){
+            keyE($(this).text());
+        })
+    </script>
+</body>

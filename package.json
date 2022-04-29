@@ -1,0 +1,18 @@
+{
+  "name": "wordle",
+  "version": "1.0.0",
+  "description": "Wordle Game",
+  "main": "main.js",
+  "scripts": {
+    "test": "nodemon main.js"
+  },
+  "author": "Jeel Vachhani",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "body-parser": "^1.20.0",
+    "crypto-js": "^4.1.1",
+    "express": "^4.17.3",
+    "open": "^8.4.0"
+  }
+}
